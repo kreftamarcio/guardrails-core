@@ -1,0 +1,52 @@
+{
+  "name": "@q1-digital/guardrails-core",
+  "version": "0.1.0",
+  "description": "AI safety layer: I/O validation, PII redaction, prompt injection detection, topic boundaries, and audit logging",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src/ --ext .ts",
+    "format": "prettier --write 'src/**/*.ts'",
+    "typecheck": "tsc --noEmit",
+    "bench": "tsx benchmarks/run.ts"
+  },
+  "keywords": [
+    "ai-safety",
+    "guardrails",
+    "pii-redaction",
+    "prompt-injection",
+    "llm-security",
+    "validation",
+    "zod",
+    "audit-log",
+    "content-moderation",
+    "typescript"
+  ],
+  "author": "Marcio Krefta <q1digitalfreela@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.23.0",
+    "pino": "^9.1.0",
+    "pg": "^8.12.0",
+    "crypto-js": "^4.2.0",
+    "tiktoken": "^1.0.15"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "@types/pg": "^8.11.0",
+    "@types/crypto-js": "^4.2.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "tsx": "^4.10.0",
+    "eslint": "^9.3.0",
+    "prettier": "^3.2.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
