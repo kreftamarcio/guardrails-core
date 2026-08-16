@@ -174,8 +174,8 @@ if (!valid) return reject(results);
 
 ```typescript
 const integrity = await auditLogger.verify();
-// { valid: true, entriesChecked: 14_302 }
-// or { valid: false, entriesChecked: 8_11, brokenAt: 1723... }
+// { valid: true, entriesChecked: 14302 }
+// or { valid: false, entriesChecked: 811, brokenAt: 1723... }
 
 const stats = await auditLogger.stats({
   start: '2026-08-01T00:00:00Z',
@@ -266,11 +266,13 @@ For PII specifically, recall and precision must be reported separately. A redact
 
 ## Design Decisions
 
-**Why validate checksums instead of matching patterns alone?** An 11-digit number is not a CPF. Without modulo-11 validation, every order ID and phone number without separators gets redacted, and users lose trust in the system. Checksum validation converts a noisy pattern matcher into a precise detector.
+**Why validate checksums instead of matching patterns alone?** An 11-digit number is not a CPF. Without modulo-11 validation, every order ID and separator-free phone number gets redacted, and users lose trust in the system. Checksum validation converts a noisy pattern matcher into a precise detector.
 
 **Why redact right-to-left?** Replacing a match changes the length of the string, invalidating every offset after it. Processing matches in reverse order means earlier offsets are still correct when you reach them.
 
-**Why does a single failure reopen a half-open circuit... wait, wrong repo.** Why does `warn` exist alongside `block`? Because you cannot safely tune a detection threshold in production if the only options are silence and rejection. `warn` lets you observe what *would* have been blocked before you enforce it.
+**Why does `warn` exist alongside `block`?** Because you cannot safely tune a detection threshold in production if the only options are silence and rejection. `warn` lets you observe what *would* have been blocked before you start enforcing it.
+
+**Why is the guard interface `pass | transform | warn | block` rather than a boolean?** A boolean forces every guard to be a gate. Real guards do different things: redaction rewrites, budget enforcement truncates, detection rejects. Modelling the action explicitly lets guards compose in a single ordered pipeline.
 
 **Why hash-chain the audit log instead of relying on database permissions?** Permissions protect against outsiders. A hash chain also detects modification by anyone with write access, including an administrator or a compromised service account.
 
